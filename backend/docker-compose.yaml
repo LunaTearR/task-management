@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # Task Service
+  task-service:
+    build:
+      context: ./cmd/task-service
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=task_management
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    networks:
+      - task_management_network
+
+  # User Service
+  user-service:
+    build:
+      context: ./cmd/user-service
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=task_management
+    ports:
+      - "3002:3002"
+    depends_on:
+      - postgres
+    networks:
+      - task_management_network
+
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:17
+    container_name: taskmanager_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: task_management
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ../db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - task_management_network
+
+  # pgAdmin (UI for PostgreSQL)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: taskmanager_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    restart: always
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - task_management_network
+
+networks:
+  task_management_network:
+    external: true
+
+volumes:
+  pgdata:
+    driver: local

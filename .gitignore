@@ -1,0 +1,6 @@
+.vscode/
+/backend/cmd/user-service/config.yaml
+/backend/cmd/task-service/config.yaml
+bak/
+/gateway/target/
+/gateway/Cargo.lock

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  frontend-service:
+    build:
+      context: ./task-management
+      dockerfile: Dockerfile
+    container_name: frontend-service
+    ports:
+      - "5173:5173"
+    networks:
+      - task_management_network
+networks:
+  task_management_network:
+    external: true
+
