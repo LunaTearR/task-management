@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"task-management-task-service/core/dto"
 	"task-management-task-service/core/interfaces"
 	"task-management-task-service/utils"
@@ -23,11 +22,9 @@ func (c *TaskController) CreateTask(ctx *fiber.Ctx) error {
 	if err := ctx.BodyParser(&req); err != nil {
 		return utils.HandleResponse(ctx, nil, "Invalid request data", err)
 	}
-	fmt.Println("Received request to create task:", req)
 	if err := c.services.CreateTask(req); err != nil {
 		return utils.HandleResponse(ctx, nil, "Failed to create task", err)
 	}
-	fmt.Println("Task created successfully:", req)
 	return utils.HandleResponse(ctx, nil, "Task created successfully", nil)
 }
 
