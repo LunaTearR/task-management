@@ -37,6 +37,37 @@ func (c *UserController) GetUsers(ctx *fiber.Ctx) error {
 	return utils.HandleResponse(ctx, users, "Users retrieved successfully", nil)
 }
 
+func (c *UserController) GetUserByID(ctx *fiber.Ctx) error {
+
+	userID := ctx.Params("id")
+	id, err := strconv.Atoi(userID)
+	if err != nil {
+		return utils.HandleResponse(ctx, nil, "Invalid user ID", err)
+	}
+	user, err := c.services.GetUserByID(uint(id))
+	if err != nil {
+		return utils.HandleResponse(ctx, nil, "Failed to retrieve user", err)
+	}
+	return utils.HandleResponse(ctx, user, "User retrieved successfully", nil)
+}
+
+func (c *UserController) UpdateUser(ctx *fiber.Ctx) error {
+	var req dto.ReqUser
+	if err := ctx.BodyParser(&req); err != nil {
+		return utils.HandleResponse(ctx, nil, "Invalid request data", err)
+	}
+	userID := ctx.Params("id")
+	id, err := strconv.Atoi(userID)
+	if err != nil {
+		return utils.HandleResponse(ctx, nil, "Invalid user ID", err)
+	}
+
+	if err := c.services.UpdateUser(&req, id); err != nil {
+		return utils.HandleResponse(ctx, nil, "Failed to update user", err)
+	}
+	return utils.HandleResponse(ctx, nil, "User updated successfully", nil)
+}
+
 func (c *UserController) DeleteUser(ctx *fiber.Ctx) error {
 
 	var req struct {

@@ -31,6 +31,22 @@ func (s *UserService) GetUsers() ([]dto.User, error) {
 	return users, nil
 }
 
+func (s *UserService) GetUserByID(id uint) (*dto.User, error) {
+	user, err := s.repo.GetUserByID(id)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get user by ID: %w", err)
+	}
+	return user, nil
+}
+
+func (s *UserService) UpdateUser(user *dto.ReqUser, id int) error {
+	if err := s.repo.UpdateUser(user, id); err != nil {
+		return fmt.Errorf("failed to update user: %w", err)
+	}
+
+	return nil
+}
+
 func (s *UserService) DeleteUser(id uint) error {
 
 	if err := s.repo.DeleteUser(id); err != nil {

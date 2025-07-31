@@ -15,5 +15,7 @@ func (s *server) registerRoutes(
 
 	v1.Post("/users", userController.CreateUser)
 	v1.Get("/users", userController.GetUsers)
-	v1.Delete("/users", userController.DeleteUser)
+	v1.Get("/users/:id", userController.GetUserByID)
+	v1.Put("/users/:id", userController.UpdateUser)
+	v1.Delete("/users/:id", userController.DeleteUser)
 }
