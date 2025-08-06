@@ -51,19 +51,22 @@ func (r *UserRepository) GetUsers() (result []dto.User, err error) {
 	return result, nil
 }
 
-func (r *UserRepository) GetUserByID(id uint) (*dto.User, error) {
-	var users *models.User
-	if err := r.db.First(&users, id).Error; err != nil {
+func (r *UserRepository) GetUserByID(ids []uint) (users []dto.User, err error) {
+	var dbUsers []models.User
+	if err = r.db.Find(&dbUsers, ids).Error; err != nil {
 		return nil, err
 	}
 
-	user := &dto.User{
-		Username:  users.Username,
-		Email:     users.Email,
-		FirstName: users.FirstName,
-		LastName:  users.LastName,
+	for _, u := range dbUsers {
+		users = append(users, dto.User{
+			ID:        u.ID,
+			Username:  u.Username,
+			Email:     u.Email,
+			FirstName: u.FirstName,
+			LastName:  u.LastName,
+		})
 	}
-	return user, nil
+	return users, nil
 }
 
 func (r *UserRepository) UpdateUser(user *dto.ReqUser, id int) error {

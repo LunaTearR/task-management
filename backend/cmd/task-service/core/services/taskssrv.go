@@ -14,7 +14,7 @@ func NewTaskService(repo interfaces.TaskRepository) interfaces.TaskService {
 	return &TaskService{repo: repo}
 }
 
-func (s *TaskService) CreateTask(req dto.ReqTask) error {
+func (s *TaskService) CreateTask(req dto.CreateTaskRequest) error {
 
 	err := s.repo.CreateTask(req)
 	if err != nil {
@@ -30,4 +30,3 @@ func (s *TaskService) GetTasks() ([]dto.Task, error) {
 	}
 	return tasks, nil
 }
-

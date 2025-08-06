@@ -5,11 +5,11 @@ import (
 )
 
 type TaskRepository interface {
-	CreateTask(req dto.ReqTask) error
+	CreateTask(req dto.CreateTaskRequest) error
 	GetTasks() ([]dto.Task, error)
 }
 
 type TaskService interface {
-	CreateTask(req dto.ReqTask) error
+	CreateTask(req dto.CreateTaskRequest) error
 	GetTasks() ([]dto.Task, error)
 }

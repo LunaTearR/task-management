@@ -13,6 +13,7 @@ type Config struct {
 	TinyThreads   int
 	App           App
 	Database      Database
+	UserService   string
 }
 
 type App struct {
@@ -36,6 +37,7 @@ type Database struct {
 	ConnMaxLifetime int
 	ConnMaxIdleTime int
 }
+
 
 func NewConfig() *Config {
 
@@ -93,6 +95,7 @@ func NewConfig() *Config {
 			v.GetString("app.database.sslmode"),
 		),
 	}
+	cfg.UserService = v.GetString("app.user_service.url")
 
 	return &cfg
 }

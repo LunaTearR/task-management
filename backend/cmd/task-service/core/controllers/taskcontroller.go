@@ -18,7 +18,7 @@ func NewTaskController(services interfaces.TaskService) *TaskController {
 
 func (c *TaskController) CreateTask(ctx *fiber.Ctx) error {
 
-	var req dto.ReqTask
+	var req dto.CreateTaskRequest
 	if err := ctx.BodyParser(&req); err != nil {
 		return utils.HandleResponse(ctx, nil, "Invalid request data", err)
 	}

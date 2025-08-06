@@ -39,12 +39,13 @@ func (c *UserController) GetUsers(ctx *fiber.Ctx) error {
 
 func (c *UserController) GetUserByID(ctx *fiber.Ctx) error {
 
-	userID := ctx.Params("id")
-	id, err := strconv.Atoi(userID)
-	if err != nil {
-		return utils.HandleResponse(ctx, nil, "Invalid user ID", err)
+	var req struct {
+		UserID []uint `json:"user_id" validate:"required"`
 	}
-	user, err := c.services.GetUserByID(uint(id))
+	if err := ctx.BodyParser(&req); err != nil {
+		return utils.HandleResponse(ctx, nil, "Invalid request data", err)
+	}
+	user, err := c.services.GetUserByID(req.UserID)
 	if err != nil {
 		return utils.HandleResponse(ctx, nil, "Failed to retrieve user", err)
 	}

@@ -8,6 +8,7 @@ import (
 
 func (s *server) registerRoutes(
 	taskController *controllers.TaskController,
+	projectController *controllers.ProjectController,
 	router fiber.Router,
 ) {
 
@@ -15,4 +16,7 @@ func (s *server) registerRoutes(
 
 	v1.Post("/tasks", taskController.CreateTask)
 	v1.Get("/tasks", taskController.GetTasks)
+	v1.Post("/projects", projectController.CreateProject)
+	v1.Get("/projects", projectController.GetProjects)
+
 }

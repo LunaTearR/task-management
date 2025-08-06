@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"os"
 	"task-management-task-service/configs"
+	"task-management-task-service/core/models"
 	"task-management-task-service/pkg"
+	"time"
 
 	"task-management-task-service/server"
 
@@ -26,15 +28,21 @@ func main() {
 			cfg := configs.NewConfig()
 
 			// เชื่อมต่อกับฐานข้อมูล
-			db, err := pkg.NewPostgresDB(cfg)
-			if err != nil {
-				fmt.Printf("ไม่สามารถเชื่อมต่อกับฐานข้อมูลได้: %v\n", err)
-				// os.Exit(1)
+			for {
+				db, err := pkg.NewPostgresDB(cfg)
+				if err != nil {
+					fmt.Printf("ไม่สามารถเชื่อมต่อกับฐานข้อมูลได้: %v\n", err)
+					fmt.Println("กำลังพยายามเชื่อมต่อกับฐานข้อมูลอีกครั้งใน 3 วินาที...")
+					// Wait before retrying
+					time.Sleep(3 * time.Second)
+					continue
+				}
+				db.Migrate(&models.Project{}, &models.ProjectMember{}, &models.Task{}, &models.TaskUser{})
+				// สร้างและเริ่มเซิร์ฟเวอร์
+				server := server.NewServer(cfg, db)
+				server.Start()
+				break
 			}
-
-			// สร้างและเริ่มเซิร์ฟเวอร์
-			server := server.NewServer(cfg, db)
-			server.Start()
 		},
 	}
 	rootCmd.AddCommand(serveCmd)

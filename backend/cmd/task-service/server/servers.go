@@ -8,6 +8,7 @@ import (
 	taskrepo "task-management-task-service/core/repositories"
 	tasksrv "task-management-task-service/core/services"
 	"task-management-task-service/pkg"
+	"task-management-task-service/pkg/userclient"
 
 	"github.com/gofiber/fiber/v2/middleware/cors"
 
@@ -47,7 +48,12 @@ func (s *server) Start() {
 	taskSrv := tasksrv.NewTaskService(taskRepo)
 	taskCtl := taskctl.NewTaskController(taskSrv)
 
-	s.registerRoutes(taskCtl, api)
+	userClient := userclient.NewUserClient(s.cfg)
+	projectRepo := taskrepo.NewProjectRepository(s.db)
+	projectSrv := tasksrv.NewProjectService(projectRepo, userClient)
+	projectCtl := taskctl.NewProjectController(projectSrv)
+
+	s.registerRoutes(taskCtl, projectCtl, api)
 
 	s.App.Get("*", func(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{

@@ -8,13 +8,21 @@ import (
 
 type Task struct {
 	gorm.Model
-	Title         string
+	Title         string `gorm:"not null"`
 	Description   string
 	Priority      int
 	CriticalLevel string
 	Status        string
-
-	DeadlineAt  *time.Time `gorm:"default:null"`
-	StartedAt   *time.Time `gorm:"default:null"`
-	CompletedAt *time.Time `gorm:"default:null"`
+	ProjectID     uint
+	Project       Project `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	DeadlineAt    *time.Time
+	StartedAt     *time.Time
+	CompletedAt   *time.Time
+	Assignees     []TaskUser `gorm:"foreignKey:TaskID"`
 }
+
+type TaskUser struct {
+	TaskID uint `gorm:"primaryKey;autoIncrement:false"`
+	UserID uint `gorm:"primaryKey;autoIncrement:false"`
+}
+ 

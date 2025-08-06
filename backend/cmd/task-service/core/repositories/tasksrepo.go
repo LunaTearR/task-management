@@ -16,17 +16,21 @@ func NewTaskRepository(db *gorm.DB) interfaces.TaskRepository {
 	return &TaskRepository{db: db}
 }
 
-func (r *TaskRepository) CreateTask(req dto.ReqTask) error {
-
+func (r *TaskRepository) CreateTask(req dto.CreateTaskRequest) error {
 	task := models.Task{
 		Title:         req.Title,
 		Description:   req.Description,
-		Status:        req.Status,
 		Priority:      req.Priority,
 		CriticalLevel: req.CriticalLevel,
+		Status:        req.Status,
 		DeadlineAt:    req.DeadlineAt,
 		StartedAt:     req.StartedAt,
 		CompletedAt:   req.CompletedAt,
+		ProjectID:     req.ProjectID,
+	}
+
+	for _, userID := range req.UserIDs {
+		task.Assignees = append(task.Assignees, models.TaskUser{UserID: userID})
 	}
 
 	if err := r.db.Create(&task).Error; err != nil {

@@ -31,8 +31,8 @@ func (s *UserService) GetUsers() ([]dto.User, error) {
 	return users, nil
 }
 
-func (s *UserService) GetUserByID(id uint) (*dto.User, error) {
-	user, err := s.repo.GetUserByID(id)
+func (s *UserService) GetUserByID(id []uint) (user []dto.User, err error) {
+	user, err = s.repo.GetUserByID(id)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get user by ID: %w", err)
 	}
