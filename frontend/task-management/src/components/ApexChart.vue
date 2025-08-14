@@ -1,19 +1,34 @@
 <template>
-  <div class="dashboard-container bg-gray-100 min-h-screen p-8 rounded-lg shadow-md">
-    <div class="chart-home">
-      <apexchart type="bar" :options="chartOptions" :series="chartSeries" />
-    </div>
+  <div>
+    <apexchart
+      type="line"
+      :options="chartOptions"
+      :series="chartSeries"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import ApexCharts from 'vue3-apexcharts'
 
+defineProps({
+  chartOptions: {
+    type: Object,
+    required: true,
+  },
+  chartSeries: {
+    type: Array,
+    required: true,
+  },
+})
+
 const chartOptions = {
   chart: {
     id: 'vuechart-example',
     height: 350,
-    toolbar: { show: false },
+    toolbar: {
+      show: false,
+    },
   },
   xaxis: {
     categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
@@ -36,16 +51,13 @@ const chartSeries = [
 ]
 </script>
 
-<style scoped>
-.dashboard-container {
-  padding: 2rem;
-  background-color: #f9fafb; /* Light gray background */
-  min-height: 100vh;
-}
-.chart-home {
-  margin-top: 2rem;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
+<script setup>
+import { defineComponent } from "vue";
+
+defineComponent({
+  components: {
+    apexchart: ApexCharts
+  },
+});
+</script>
+

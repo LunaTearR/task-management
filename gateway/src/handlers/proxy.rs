@@ -3,10 +3,12 @@ use reqwest::Client;
 
 pub async fn proxy_service_task(req: Request<Body>) -> Result<Response<Body>, StatusCode> {
     proxy_request(req, "http://task-service:3001").await
+    // proxy_request(req, "http://localhost:3001").await
 }
 
 pub async fn proxy_service_user(req: Request<Body>) -> Result<Response<Body>, StatusCode> {
     proxy_request(req, "http://user-service:3002").await
+    // proxy_request(req, "http://localhost:3002").await
 }
 
 async fn proxy_request(
